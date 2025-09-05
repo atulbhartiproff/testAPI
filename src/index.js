@@ -5,6 +5,7 @@ import users from "./routes/users.js";
 import games from "./routes/games.js";
 import interactions from "./routes/interactions.js";
 import recommendations from "./routes/recommendation.js"
+import collabrec from "./routes/collabrec.js"
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -17,6 +18,7 @@ app.use("/users",users);
 app.use("/games",games);
 app.use("/interactions",interactions);
 app.use("/recommendations",recommendations);
+app.use("/collab",collabrec);
 
 app.listen(PORT, ()=> {console.log("SERVER RUNNING BOYS");})
 
