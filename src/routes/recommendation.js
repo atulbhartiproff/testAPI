@@ -1,14 +1,14 @@
-import {Router} from "express"; 
-import {db} from "../db.js"
+import { Router } from "express";
+import { db } from "../db.js";
 
-const router=Router();
+const router = Router();
 
-router.get("/:userid",async (req,res)=>{
-    const {userid}=req.params;
+router.get("/:userid", async (req, res) => {
+  const { userid } = req.params;
 
-    try{
-        const result=await db.query(
-            `SELECT g.*
+  try {
+    const result = await db.query(
+      `SELECT g.*
        FROM games g
        WHERE g.genre IN (
            SELECT DISTINCT g2.genre
@@ -21,13 +21,26 @@ router.get("/:userid",async (req,res)=>{
        )
        LIMIT 5;`,
       [userid]
-        );
-        res.json(result.rows);
+    );
+
+    if (result.rows.length === 0) {
+      const fallback = await db.query(
+        `
+        SELECT g.id, g.title, g.genre, g.platform
+        FROM games g
+        LEFT JOIN interactions i ON g.id = i.game_id
+        GROUP BY g.id
+        ORDER BY COUNT(i.id) DESC
+        LIMIT 10;`
+      );
+      return res.json(fallback.rows);
     }
-    catch(err){
-        console.log(err);
-        res.status(500).json({error:"Something messed up"});
-    }
+
+    res.json(result.rows);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Something messed up" });
+  }
 });
 
 export default router;
