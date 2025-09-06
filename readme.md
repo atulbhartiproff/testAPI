@@ -10,6 +10,8 @@ A full-stack game recommendation API built with Node.js, Express, and PostgreSQL
 * **Hybrid Recommendations**: Combines content-based and collaborative filtering with adjustable weights and duplicates handling.
 * **Fallback Mechanism**: Recommends top popular games when personalized recommendations are unavailable.
 * **Flexible Interaction Types**: `play`, `like`, `rate`.
+* **Mutual Friendship System**: Users can add friends, and friendships are mutual by default.
+* **Friends API**: Get a user's friends to enable social features.
 * **Scalable**: Designed to handle hundreds of users and thousands of games.
 
 ## Tech Stack
@@ -56,6 +58,18 @@ CREATE TABLE IF NOT EXISTS interactions (
 );
 ```
 
+### Friends Table
+
+```sql
+CREATE TABLE IF NOT EXISTS friends (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    friend_id INT REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, friend_id)
+);
+```
+
 ## API Endpoints
 
 ### Users
@@ -72,6 +86,11 @@ CREATE TABLE IF NOT EXISTS interactions (
 
 * `POST /interactions` : Log user interaction with a game.
 * `GET /interactions/:userId` : Fetch all interactions for a user.
+
+### Friends
+
+* `POST /users/:userId/friends` : Add a mutual friendship (user and friend).
+* `GET /users/:userId/friends` : Get all friends of a user.
 
 ### Recommendations
 
@@ -104,6 +123,7 @@ node src/app.js
 * Users: Atul, Nisha, David
 * Games: Elden Ring, Dark Souls, Valorant, Stardew Valley, etc.
 * Interactions: `play`, `like`, `rate` with various ratings.
+* Friendships: Mutual friends to test social features.
 
 ## Notes
 
