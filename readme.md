@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS interactions (
 ### Recommendations
 
 * `GET /recommendations/:userId` : Content-based recommendations.
-* `GET /recommendations/collab/:userId` : Collaborative filtering recommendations.
+* `GET /collab/:userId` : Collaborative filtering recommendations.
 
 ## Usage
 
