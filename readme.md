@@ -1,13 +1,14 @@
 # Game Recommendation API
 
-A full-stack game recommendation API built with Node.js, Express, and PostgreSQL. Supports both content-based and collaborative filtering recommendations based on user interactions.
+A full-stack game recommendation API built with Node.js, Express, and PostgreSQL. Supports content-based, collaborative, and hybrid recommendations based on user interactions.
 
 ## Features
 
 * **Users, Games, and Interactions** tables with relational integrity.
-* **Content-Based Filtering**: Recommend games based on genre of last played game.
+* **Content-Based Filtering**: Recommend games based on the genre of the user's last played game.
 * **Collaborative Filtering**: Recommend games based on what similar users played and liked.
-* **Hybrid Approach Ready**: Can combine content and collaborative recommendations.
+* **Hybrid Recommendations**: Combines content-based and collaborative filtering with adjustable weights and duplicates handling.
+* **Fallback Mechanism**: Recommends top popular games when personalized recommendations are unavailable.
 * **Flexible Interaction Types**: `play`, `like`, `rate`.
 * **Scalable**: Designed to handle hundreds of users and thousands of games.
 
@@ -75,7 +76,9 @@ CREATE TABLE IF NOT EXISTS interactions (
 ### Recommendations
 
 * `GET /recommendations/:userId` : Content-based recommendations.
-* `GET /collab/:userId` : Collaborative filtering recommendations.
+* `GET /recommendations/collab/:userId` : Collaborative filtering recommendations.
+* `GET /recommendations/hybrid/:userId` : Weighted hybrid recommendations combining content and collaborative filtering with fallback to popular games.
+* `GET /recommendations/fallback` : Top popular games when personalized recommendations are unavailable.
 
 ## Usage
 
@@ -104,13 +107,14 @@ node src/app.js
 
 ## Notes
 
-* Ensure at least some overlapping interactions between users to see collaborative recommendations.
+* Ensure some overlapping interactions between users to see collaborative recommendations.
 * Ratings and action types are used to weigh recommendations.
-* Content-based filtering currently recommends based on the genre of the last played game.
+* Hybrid recommendations apply configurable weights and remove duplicates.
+* Content-based filtering currently uses genre of the last played game; future enhancements may include text similarity on descriptions.
 
 ## Future Improvements
 
-* Hybrid recommendation system combining content and collaborative filtering.
-* Text similarity on game descriptions using embeddings.
+* Implement TF-IDF or embedding-based content similarity for smarter recommendations.
+* Adjust weights dynamically based on user behavior.
+* Frontend integration with real-time recommendation updates.
 * Caching and performance optimizations for large datasets.
-* Frontend integration with user-friendly recommendation UI.
